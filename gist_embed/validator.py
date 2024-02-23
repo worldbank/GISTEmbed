@@ -79,6 +79,8 @@ def validate_script_id(gist_args, model_args, training_args):
         assert gist_args.gist_medi_data_name == "avsolatorio/medi-data-mteb-wb-prwp-covid_avs_triplets"
     elif YYY[0] == "5":
         assert gist_args.gist_medi_data_name == "avsolatorio/medi-data-mteb-wb-prwp-covid-sent-avs_triplets"
+    elif YYY[0] == "6":
+        assert gist_args.gist_medi_data_name == "avsolatorio/medi-data-mteb-covid-bing-query-gpt4-avs_triplets"
     else:
         raise ValueError(f"Unregistered YYY: {YYY}")
 
@@ -114,6 +116,8 @@ def validate_script_id(gist_args, model_args, training_args):
         assert training_args.learning_rate == 2e-5
     elif a == "1":
         assert training_args.learning_rate == 5e-6
+    elif a == "2":
+        assert training_args.learning_rate == 1e-4
     else:
         raise ValueError(f"Unregistered a: {a}")
 
