@@ -5,11 +5,14 @@ import tempfile
 
 from typing import List, Optional
 from huggingface_hub import HfApi, run_as_future as run_as_future_hf
-from huggingface_hub.utils._errors import HfHubHTTPError
+# from huggingface_hub.utils._errors import HfHubHTTPError
 import backoff
 
 logger = logging.getLogger(__name__)
 
+
+class ConnectionError(BaseException):
+    pass
 
 
 def background_hf_model_upload(tmp_dir, token, repo_id, commit_message):
@@ -21,20 +24,19 @@ def background_hf_model_upload(tmp_dir, token, repo_id, commit_message):
     with open(os.path.join(tmp_dir, "commit-info.json"), "w") as fOut:
         json.dump(dict(repo_id=repo_id, commit_message=commit_message), fOut)
 
-    folder_url = upload_folder(
-            repo_id=repo_id,
-            folder_path=tmp_dir,
-            commit_message=commit_message,
-            token=token,
-            run_as_future=False,
-        )
+    upload_folder(
+        repo_id=repo_id,
+        folder_path=tmp_dir,
+        commit_message=commit_message,
+        token=token,
+        run_as_future=False,
+    )
 
-    run_as_future_hf(shutil.rmtree, tmp_dir)
+    return run_as_future_hf(shutil.rmtree, tmp_dir)
 
-    return folder_url
 
 # @save_to_hub_args_decorator
-@backoff.on_exception(backoff.expo, [HfHubHTTPError, Exception], max_tries=6)
+@backoff.on_exception(backoff.expo, BaseException, max_tries=6)
 def save_to_hub(model,
                 repo_id: str,
                 organization: Optional[str] = None,
@@ -75,48 +77,51 @@ def save_to_hub(model,
                 f"Providing an `organization` to `save_to_hub` is deprecated, please only use `repo_id=\"{repo_id}\"` instead."
             )
 
-    api = HfApi(token=token)
-    repo_url = api.create_repo(
-        repo_id=repo_id,
-        private=private,
-        repo_type=None,
-        exist_ok=exist_ok,
-    )
-    if local_model_path:
-        folder_url = api.upload_folder(
+    try:
+        api = HfApi(token=token)
+        repo_url = api.create_repo(
             repo_id=repo_id,
-            folder_path=local_model_path,
-            commit_message=commit_message,
-            run_as_future=run_as_future,
+            private=private,
+            repo_type=None,
+            exist_ok=exist_ok,
         )
-    else:
-        # If run_as_future is True, we need to create a temporary directory to save the model.
-        # This temporary directory should not immediately be deleted, as the upload_folder function
-        # is asynchronous and will run in the background.
+        if local_model_path:
+            folder_url = api.upload_folder(
+                repo_id=repo_id,
+                folder_path=local_model_path,
+                commit_message=commit_message,
+                run_as_future=run_as_future,
+            )
+        else:
+            # If run_as_future is True, we need to create a temporary directory to save the model.
+            # This temporary directory should not immediately be deleted, as the upload_folder function
+            # is asynchronous and will run in the background.
 
-        # If run_as_future is False, we can use a temporary directory that is automatically deleted
+            # If run_as_future is False, we can use a temporary directory that is automatically deleted
 
-        # We first implement the run_as_future=False case, as this is the most common case.
+            # We first implement the run_as_future=False case, as this is the most common case.
 
-        if not run_as_future:
-            with tempfile.TemporaryDirectory() as tmp_dir:
+            if not run_as_future:
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    create_model_card = replace_model_card or not os.path.exists(os.path.join(tmp_dir, 'README.md'))
+                    model.save(tmp_dir, model_name=repo_url.repo_id, create_model_card=create_model_card, train_datasets=train_datasets)
+                    folder_url = api.upload_folder(
+                        repo_id=repo_id,
+                        folder_path=tmp_dir,
+                        commit_message=commit_message
+                    )
+            else:
+                # We need to create a temporary directory that is not automatically deleted.
+                tmp_dir = tempfile.mkdtemp(prefix="gist-tmp-")
                 create_model_card = replace_model_card or not os.path.exists(os.path.join(tmp_dir, 'README.md'))
                 model.save(tmp_dir, model_name=repo_url.repo_id, create_model_card=create_model_card, train_datasets=train_datasets)
-                folder_url = api.upload_folder(
-                    repo_id=repo_id,
-                    folder_path=tmp_dir,
-                    commit_message=commit_message
-                )
-        else:
-            # We need to create a temporary directory that is not automatically deleted.
-            tmp_dir = tempfile.mkdtemp()
-            create_model_card = replace_model_card or not os.path.exists(os.path.join(tmp_dir, 'README.md'))
-            model.save(tmp_dir, model_name=repo_url.repo_id, create_model_card=create_model_card, train_datasets=train_datasets)
-            folder_url = api.run_as_future(background_hf_model_upload, tmp_dir, token, repo_id, commit_message)
+                return api.run_as_future(background_hf_model_upload, tmp_dir, token, repo_id, commit_message)
 
-    refs = api.list_repo_refs(repo_id=repo_id)
-    for branch in refs.branches:
-        if branch.name == "main":
-            return f"https://huggingface.co/{repo_id}/commit/{branch.target_commit}"
-    # This isn't expected to ever be reached.
-    return folder_url
+        refs = api.list_repo_refs(repo_id=repo_id)
+        for branch in refs.branches:
+            if branch.name == "main":
+                return f"https://huggingface.co/{repo_id}/commit/{branch.target_commit}"
+        # This isn't expected to ever be reached.
+        return folder_url
+    except Exception as e:
+        raise ConnectionError(e)
