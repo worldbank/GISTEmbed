@@ -59,6 +59,12 @@ class EncoderSentenceTransformer(SentenceTransformer):
             warnings.warn("The normalization module for this model will be removed since `normed_tasks` is not empty.")
             self.pop(-1)
 
+    def gradient_checkpointing_enable(self, gradient_checkpointing_kwargs=None):
+        self._first_module().auto_model.gradient_checkpointing_enable(gradient_checkpointing_kwargs=gradient_checkpointing_kwargs)
+
+    def gradient_checkpointing_disable(self):
+        self._first_module().auto_model.gradient_checkpointing_disable()
+
     def _load_auto_model(
         self,
         model_name_or_path: str,
