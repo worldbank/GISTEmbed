@@ -136,8 +136,37 @@ TASK_LIST_STS = [
     # "SummEval",
 ]
 
-TASK_LIST_PRIORITY = TASK_LIST_STS + TASK_LIST_PAIR_CLASSIFICATION + TASK_LIST_CLASSIFICATION + TASK_LIST_RERANKING
+TASK_LIST_SORTED_RETRIEVAL = [
+    "NFCorpus",  # 14.1
+    "SciFact",  # 18.08
+    "SCIDOCS",  # 68.18
+    "CQADupstackGisRetrieval",  # 84.2
+    "CQADupstackWebmastersRetrieval",  # 94.79
+    "CQADupstackPhysicsRetrieval",  # 95.43
+    "CQADupstackAndroidRetrieval",  # 96.04
+    "CQADupstackUnixRetrieval",  # 105.2
+    "CQADupstackWordpressRetrieval",  # 116.01
+    "CQADupstackStatsRetrieval",  # 122.02
+    "CQADupstackMathematicaRetrieval",  # 140.68
+    "CQADupstackEnglishRetrieval",  # 159.67
+    "ArguAna",  # 176.75
+    "CQADupstackGamingRetrieval",  # 178.18
+    "CQADupstackTexRetrieval",  # 204.78
+    "CQADupstackProgrammersRetrieval",  # 212.59
+    "QuoraRetrieval",  # 266.69
+    "TRECCOVID",  # 446.51
+    "FiQA2018",  # 682.53
+    "Touche2020",  # 869.96
+    "DBPedia",  # 2963.66
+    "NQ",  # 2998.78
+    "HotpotQA",  # 3877.43
+    "ClimateFEVER",  # 6076.33
+    "FEVER",  # 6606.0
+    "MSMARCO",  # 8087.75
+]
 
+TASK_LIST_PRIORITY = TASK_LIST_STS + TASK_LIST_PAIR_CLASSIFICATION + TASK_LIST_CLASSIFICATION + TASK_LIST_RERANKING + TASK_LIST_SORTED_RETRIEVAL
+# TASK_LIST_STS,TASK_LIST_PAIR_CLASSIFICATION,TASK_LIST_CLASSIFICATION,TASK_LIST_CLUSTERING,TASK_LIST_RERANKING
 TASK_LIST_SUMMARIZATION = [
     'SummEval',
 ]
@@ -807,7 +836,22 @@ def main(run_type, model_id, tasks=None, cache_folder="./cache_dir", output_fold
             expected_step=expected_step,
         )
     elif run_type == "run_mteb":
-        if tasks:
+        if "," in tasks or isinstance(tasks, (tuple, list)):
+            if isinstance(tasks, str):
+                tasks = tasks.split(",")
+            _tasks = []
+            for t in tasks:
+                if t in TASK_NAME_GROUP:
+                    _tasks.append(t)
+                elif t.startswith("TASK_LIST_") and t in globals():
+                    _tasks.extend(globals().get(t, []))
+                else:
+                    print(f"tasks::{t} not recognized...")
+            tasks = _tasks
+            print(tasks)
+        elif tasks in TASK_NAME_GROUP:
+            tasks = [tasks]
+        elif tasks:
             tasks = globals().get(tasks, TASK_NAMES_EVAL_TIME)
         else:
             tasks = TASK_NAMES_EVAL_TIME
