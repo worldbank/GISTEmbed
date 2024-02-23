@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "gist_embed"
+version = "0.1.0"
+description = ""
+authors = ["Aivin V. Solatorio <avsolatorio@gmail.com>"]
+readme = "README.md"
+packages = [{include = "gist_embed"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+sentence-transformers = {git = "https://github.com/UKPLab/sentence-transformers.git", rev = "ed916fb5efb16a88ad23f9d6bfd9b91bb38dcaf4"}
+transformers = {extras = ["torch"], version = "^4.36.2"}
+torch = "^2.1.2"
+datasets = "^2.16.1"
+fire = "^0.5.0"
+backoff = "^2.2.1"
+openpyxl = "^3.1.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.1"
+ipython = "^8.19.0"
+mteb = {extras = ["beir"], version = "^1.1.1"}
+wandb = "^0.16.1"
+huggingface-cli = "^0.1"
+openai = "^1.12.0"
+
+
+[tool.poetry.group.wb.dependencies]
+langchain = "^0.1.4"
+doc2json = {git = "https://github.com/avsolatorio/s2orc-doc2json.git", rev = "4f1a9eb1bf8f95ef02aa17b98becc3acb13c5360"}
+bs4 = "^0.0.2"
+lxml = "^5.1.0"
+tiktoken = "^0.5.2"
+nltk = "^3.8.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
