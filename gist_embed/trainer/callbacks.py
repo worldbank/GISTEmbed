@@ -64,7 +64,7 @@ class ModelSaveCallback(TrainerCallback):
 
             repo_id = f"{self._hub_organization}/{repo_name}"
 
-            model.save_to_hub(
+            job = model.save_to_hub(
                 repo_id=repo_id,
                 commit_message=commit_message,
                 private=self._hub_private,
@@ -73,6 +73,14 @@ class ModelSaveCallback(TrainerCallback):
                 train_datasets=self._hub_train_datasets,
                 run_as_future=self._hub_run_as_future,
             )
+
+            if self._hub_run_as_future:
+                push_jobs = [job]
+
+                if self.push_in_progress is None:
+                    self.push_in_progress = PushInProgress(push_jobs)
+                else:
+                    self.push_in_progress.jobs.extend(push_jobs)
 
     def save_checkpoint(self, model: nn.Module, state: TrainerState):
         repo_name = f"{self._hub_model_name}-checkpoint"
