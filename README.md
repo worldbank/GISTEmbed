@@ -19,16 +19,19 @@ Compared to traditional methods, which often rely on random or heuristic-based s
 <br>
 
 
-
-*GIST Embedding: Guided In-sample Selection of Training Negatives for Text Embedding*
-
-The model is fine-tuned on top of the [BAAI/bge-base-en-v1.5](https://huggingface.co/BAAI/bge-base-en-v1.5) using the [MEDI dataset](https://github.com/xlang-ai/instructor-embedding.git) augmented with mined triplets from the [MTEB Classification](https://huggingface.co/mteb) training dataset (excluding data from the Amazon Polarity Classification task).
-
 The model does not require any instruction for generating embeddings. This means that queries for retrieval tasks can be directly encoded without crafting instructions.
 
-Technical details of the model will be published shortly.
+## Trained models
 
-# Data
+We have fine-tuned various models using the GISTEmbed framework. The models are available on the Hugging Face model hub:
+
+- [avsolatorio/GIST-large-Embedding-v0](https://huggingface.co/avsolatorio/GIST-large-Embedding-v0): The model fine-tuned using the GISTEmbed framework and the MEDI+MTEBcls dataset. The base model used is the [`BAAI/bge-large-en-v1.5`](https://huggingface.co/BAAI/bge-large-en-v1.5).
+- [avsolatorio/GIST-Embedding-v0](https://huggingface.co/avsolatorio/GIST-Embedding-v0): The model fine-tuned using the GISTEmbed framework and the MEDI+MTEBcls dataset. The base model used is the [`BAAI/bge-base-en-v1.5`](https://huggingface.co/BAAI/bge-base-en-v1.5).
+- [avsolatorio/GIST-small-Embedding-v0](https://huggingface.co/avsolatorio/GIST-small-Embedding-v0): The model fine-tuned using the GISTEmbed framework and the MEDI+MTEBcls dataset. The base model used is the [`BAAI/bge-small-en-v1.5`](https://huggingface.co/BAAI/bge-small-en-v1.5).
+- [avsolatorio/GIST-all-MiniLM-L6-v2](https://huggingface.co/avsolatorio/GIST-all-MiniLM-L6-v2): The model fine-tuned using the GISTEmbed framework and the MEDI+MTEBcls dataset. The base model used is the [`sentence-transformers/all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
+
+
+## Data
 
 The dataset used is a compilation of the MEDI dataset and the MTEB Classification training dataset. Third-party datasets may be subject to additional terms and conditions under their associated licenses. A HuggingFace Dataset version of the compiled dataset, and the specific revision used to train the model, is available:
 
