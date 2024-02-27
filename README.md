@@ -21,7 +21,7 @@ Compared to traditional methods, which often rely on random or heuristic-based s
 
 The model does not require any instruction for generating embeddings. This means that queries for retrieval tasks can be directly encoded without crafting instructions.
 
-## Trained models
+# Trained models
 
 We have fine-tuned various models using the GISTEmbed framework. The models are available on the Hugging Face model hub:
 
@@ -31,7 +31,7 @@ We have fine-tuned various models using the GISTEmbed framework. The models are 
 - [avsolatorio/GIST-all-MiniLM-L6-v2](https://huggingface.co/avsolatorio/GIST-all-MiniLM-L6-v2): The model fine-tuned using the GISTEmbed framework and the MEDI+MTEBcls dataset. The base model used is the [`sentence-transformers/all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
 
 
-## Data
+# Data
 
 The dataset used is a compilation of the MEDI dataset and the MTEB Classification training dataset. Third-party datasets may be subject to additional terms and conditions under their associated licenses. A HuggingFace Dataset version of the compiled dataset, and the specific revision used to train the model, is available:
 
@@ -72,6 +72,44 @@ scores = F.cosine_similarity(embeddings.unsqueeze(1), embeddings.unsqueeze(0), d
 
 print(scores.cpu().numpy())
 ```
+
+# Reproducibility
+
+This section outlines how to fine-tune models using the GISTEmbed framework. The following steps are necessary to reproduce the results:
+
+
+First, create a new conda environment and install poetry.
+
+```
+conda create -n gist-embed python=3.10
+conda activate gist-embed
+pip install poetry
+```
+
+Next, clone the repository and install the dependencies.
+
+```
+git clone https://github.com/avsolatorio/GISTEmbed.git
+cd GISTEmbed
+
+poetry install
+```
+
+To reduce the likelihood of encountering issues and unexpected training runs, we set up a convention that would validate the intended parameters and configurations.
+
+One can refer to the [gist_embed/validator.py](gist_embed/validator.py) file to see the validation logic. Additional configurations must be registered in the validator to ensure that the intended parameters are correctly set.
+
+After registering the intended configurations, an experiment script can be created to fine-tune the model. See example: [experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh](experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh).
+
+To run the experiment, simply execute the following command:
+
+```
+poetry run bash experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh
+```
+
+The script will execute the experiment and save the model to the specified output directory. There are configurations in the script that handles the model checkpointing to Hugging Face model hub. Ensure to change the `--callback_hub_organization <organization>` to the appropriate organization.
+
+The script also uses WANDB for logging. Ensure to set the `WANDB_API_KEY` environment variable to enable logging to WANDB.
 
 # Training Parameters
 
