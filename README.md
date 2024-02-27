@@ -1,4 +1,24 @@
-<h1 align="center">GIST Embedding v0</h1>
+# GISTEmbed
+
+The GISTEmbed framework (Guided In-sample Selection of Training Negatives for Text Embedding Fine-tuning) introduces an innovative approach to dynamically mine training negatives within a batch, serving as contrastive samples for fine-tuning embedding models. At the core of GISTEmbed is the utilization of a guide model, which assesses the relevance of samples in the batch against a query-positive pair. This model ensures that only examples deemed irrelevant are selected as training negatives.
+
+This methodology is particularly advantageous for fine-tuning smaller models, leading to notable improvements across a wide range of NLP tasks. By focusing on the in-sample selection of negatives, GISTEmbed addresses common challenges in contrastive learning, such as the efficient and effective identification of informative negative samples.
+
+Compared to traditional methods, which often rely on random or heuristic-based selection, GISTEmbed's guided approach ensures a higher quality of training negatives, contributing to more robust and generalizable embeddings.
+
+<br>
+<br>
+<p align="center">
+<img src="https://github.com/avsolatorio/GISTEmbed/raw/main/img/GISTEmbed%20Model.png" style="width:75%"/>
+</p>
+<p align="center">
+<strong>GISTEmbed: Guided In-sample Selection of Training Negatives for Text Embedding Fine-tuning</strong>
+<br>
+<a href="https://arxiv.org/abs/2402.16829">Paper on ArXiv</a>
+</p>
+<br>
+
+
 
 *GIST Embedding: Guided In-sample Selection of Training Negatives for Text Embedding*
 
