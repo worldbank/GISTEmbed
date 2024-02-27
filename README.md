@@ -81,8 +81,10 @@ This section outlines how to fine-tune models using the GISTEmbed framework. The
 First, create a new conda environment and install poetry.
 
 ```
-conda create -n gist-embed python=3.10
-conda activate gist-embed
+conda create -n GISTEmbed python=3.10
+
+conda activate GISTEmbed
+
 pip install poetry
 ```
 
@@ -90,6 +92,7 @@ Next, clone the repository and install the dependencies.
 
 ```
 git clone https://github.com/avsolatorio/GISTEmbed.git
+
 cd GISTEmbed
 
 poetry install
@@ -101,6 +104,8 @@ One can refer to the [gist_embed/validator.py](gist_embed/validator.py) file to 
 
 After registering the intended configurations, an experiment script can be created to fine-tune the model. See example: [experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh](experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh).
 
+Details of the arguments used in the script can be found in the [gist_embed/trainer/arguments](gist_embed/trainer/arguments) file.
+
 To run the experiment, simply execute the following command:
 
 ```
@@ -110,6 +115,12 @@ poetry run bash experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_
 The script will execute the experiment and save the model to the specified output directory. There are configurations in the script that handles the model checkpointing to Hugging Face model hub. Ensure to change the `--callback_hub_organization <organization>` to the appropriate organization.
 
 The script also uses WANDB for logging. Ensure to set the `WANDB_API_KEY` environment variable to enable logging to WANDB.
+
+# Base model
+
+We have implemented some tricks on top of the (excellent!) Sentence Transformers library to support the GISTEmbed framework. One notable trick is supporting gradient checkpointing for training the models. This is particularly useful for training large models with limited GPU memory.
+
+See the [gist_embed/base.py](gist_embed/base.py) file for the implementation details.
 
 # Training Parameters
 
