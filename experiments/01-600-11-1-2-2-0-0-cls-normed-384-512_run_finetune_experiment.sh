@@ -74,5 +74,6 @@ poetry run python train_finetune.py \
 --report_to wandb \
 --run_name ${RUN_NAME} \
 --save_safetensors false \
+--gradient_checkpointing true \
 --bf16 \
 --save_total_limit 1
