@@ -70,8 +70,26 @@ Specific training details and strategies will be published shortly.
 The model was evaluated using the [MTEB Evaluation](https://huggingface.co/mteb) suite.
 
 
+# Citation
+Please cite our work if you use GISTEmbed or the datasets we published in your projects or research
+
+```
+@article{solatorio2024gistembed,
+    title={GISTEmbed: Guided In-sample Selection of Training Negatives for Text Embedding Fine-tuning},
+    author={Aivin V. Solatorio},
+    journal={arXiv preprint arXiv:2402.16829},
+    year={2024},
+    URL={https://arxiv.org/abs/2402.16829}
+    eprint={2402.16829},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+```
+
 # Acknowledgements
 
 This work is supported by the "KCP IV - Exploring Data Use in the Development Economics Literature using Large Language Models (AI and LLMs)" project funded by the [Knowledge for Change Program (KCP)](https://www.worldbank.org/en/programs/knowledge-for-change) of the World Bank - RA-P503405-RESE-TF0C3444.
 
 The findings, interpretations, and conclusions expressed in this material are entirely those of the authors. They do not necessarily represent the views of the International Bank for Reconstruction and Development/World Bank and its affiliated organizations, or those of the Executive Directors of the World Bank or the governments they represent.
+
+We also send 🤗 to the HuggingFace 🤗, Sentence Transformers, PyTorch, and to all open-sourced projects for all the open-sourced software they release.
