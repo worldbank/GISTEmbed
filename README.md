@@ -14,7 +14,7 @@ Compared to traditional methods, which often rely on random or heuristic-based s
 <p align="center">
 <strong>GISTEmbed: Guided In-sample Selection of Training Negatives for Text Embedding Fine-tuning</strong>
 <br>
-<a href="https://arxiv.org/abs/2402.16829">Paper on ArXiv</a>
+<a href="https://arxiv.org/abs/2402.16829" target="_blank">Paper on ArXiv</a>
 </p>
 <br>
 
