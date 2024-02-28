@@ -73,6 +73,13 @@ scores = F.cosine_similarity(embeddings.unsqueeze(1), embeddings.unsqueeze(0), d
 print(scores.cpu().numpy())
 ```
 
+# Guided in-batch constrastive loss
+
+For anyone interested in the technical implementation of GISTEmbed as a training mechanism, please refer to the loss computation implemented in the loss function [`guided_in_batch_contrastive_loss`](https://github.com/avsolatorio/GISTEmbed/blob/538e3d749b1944e8362c5566385111763866fa4c/gist_embed/trainer/loss.py#L599).
+
+This loss function is subsequently used in the [`GISTTrainer`](https://github.com/avsolatorio/GISTEmbed/blob/538e3d749b1944e8362c5566385111763866fa4c/gist_embed/trainer/trainer.py#L127).
+
+
 # Reproducibility
 
 This section outlines how to fine-tune models using the GISTEmbed framework. The following steps are necessary to reproduce the results:
