@@ -75,5 +75,6 @@ poetry run python train_finetune.py \
 --run_name ${RUN_NAME} \
 --save_safetensors false \
 --gradient_checkpointing true \
+--save_total_limit 1 \
 --bf16 \
---save_total_limit 1
+"$@"
