@@ -116,7 +116,7 @@ Details of the arguments used in the script can be found in the [gist_embed/trai
 To run the experiment, simply execute the following command:
 
 ```
-poetry run bash experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh
+bash experiments/01-600-11-1-2-2-0-0-cls-normed-384-512_run_finetune_experiment.sh
 ```
 
 The script will execute the experiment and save the model to the specified output directory. There are configurations in the script that handles the model checkpointing to Hugging Face model hub. Ensure to change the `--callback_hub_organization <organization>` to the appropriate organization.
